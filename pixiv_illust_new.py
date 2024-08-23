@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov  9 21:34:20 2021
+python 3.11.2
 
 @author: yuki
 """
@@ -28,7 +29,7 @@ def writeFile(filename,msg,mode) :
 
 
 #client.jsonの読み込み処理
-f = open("client.json", "r")
+f = open("/home/pi/pixiv/client.json", "r")
 client_info = json.load(f)
 f.close()
 
