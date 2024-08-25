@@ -4,10 +4,11 @@ Created on Tue Nov  9 21:34:20 2021
 python 3.11.2
 
 @author: yuki
+@emendator: Rusty
+
 """
 
-#今何枚目をダウンロードか表示したい
-#明らかにgetの回数が増えたから全然進まない
+#どこまで取得したかをjsonで保持しフォロー新着のみを取得
 
 
 from pixivpy3 import *
