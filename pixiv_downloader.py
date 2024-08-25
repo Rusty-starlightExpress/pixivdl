@@ -4,10 +4,12 @@ Created on Tue Nov  9 21:34:20 2021
 Python 3.11.2
 
 @author: yuki
+@emendator: Rusty
+
 """
 
-#今何枚目をダウンロードか表示したい
-#明らかにgetの回数が増えたから全然進まない
+#idsリストをダウンロード完了毎に削除したい
+#PixivPy-Asyncを使って時間短縮を図りたい
 
 
 from pixivpy3 import *
@@ -20,19 +22,17 @@ import zipfile
 import cv2
 import numpy as np
 import re
-
+import time
+import sys
 
 #client.jsonの読み込み処理
 f = open("/home/pi/pixiv/client.json", "r")
 client_info = json.load(f)
 f.close()
 
-
-#2021/2/21ログイン方法変更
-#2021/11/9　api(PixivAPI())削除
 aapi = AppPixivAPI()
 aapi.auth(refresh_token = client_info["refresh_token"])
-
+first_check = True
 
 debug = False
 
@@ -68,6 +68,12 @@ exclude_tags = ["R-18"]#一つでもかぶっていればダウンロードし�
 #ここから各イラストレーターさんごとの処理
 #for user_id in [11,12848282]:
 for user_id in client_info["ids"]:
+    os.system('clear')
+    count=1
+    if first_check != True:
+        aapi = AppPixivAPI()
+        aapi.auth(refresh_token = client_info["refresh_token"])
+    first_check = False
     sleep(10)
     user_detail = aapi.user_detail(user_id)
     
@@ -139,11 +145,12 @@ for user_id in client_info["ids"]:
         
         #こことってこれないとぐるぐる回る
         user_illusts = aapi.user_illusts(user_id)
+        count = 0
         while True:
             try:
 
                 for illust in user_illusts.illusts:
-                
+                    count += 1
 
                     #ダウンロード済みか
                     #https://www.pixiv.help/hc/ja/articles/235584428-pixiv%E3%81%AB%E6%8A%95%E7%A8%BF%E3%81%A7%E3%81%8D%E3%82%8B%E7%94%BB%E5%83%8F%E3%81%AE%E7%A8%AE%E9%A1%9E%E3%82%92%E7%9F%A5%E3%82%8A%E3%81%9F%E3%81%84   
@@ -163,29 +170,18 @@ for user_id in client_info["ids"]:
                     file_name_head = saving_direcory_path + str(illust.id)+ "_" + title_name + "_p" + str(illust.page_count-1) 
 
                     if os.path.exists(file_name_head+".png") or os.path.exists(file_name_head+".jpg") or os.path.exists(file_name_head+".jpeg") or os.path.exists(file_name_head+".gif") or os.path.exists(saving_direcory_path+str(illust.id)+'_ugoira'):
-                        print("--------------------------------")
-                        print("Title:"+title_name+" has already downloaded.")
+                        print("\033[2K\033[GCount       : " + str(count) + "\n",end="")
+                        print("\033[2K\033[GTitle       : " + title_name +" has already downloaded.\r"+ "\n\033[2A",end="")
                         continue
-                    
-                    
-
-
-
-                    
-
-
-                    
+ 
                     #ダウンロード開始
                     sleep(1)
                     download_work_no += 1
-                    print("--------------------------------")
-                    print("download    :" + illust.title)
-                    print("download id :" + str(illust.id))
+                    print("\033[2K\033[GCount       : " + str(count) + "\n",end="")
+                    print("\033[2K\033[Gdownload    : " + illust.title + "\n",end="")
+                    print("\033[2K\033[Gdownload id : " + str(illust.id) + "\n\033[3A",end="")
                     #print("caption")
                     #print(illust.caption.replace("<br />", "\n"))
-
-
-
 
                     if illust.type == "illust":
                         if illust.page_count == 1:
@@ -416,11 +412,6 @@ for user_id in client_info["ids"]:
                             with open(f'{dir_name}/ugoira_onefile.html', 'w', encoding='utf-8') as f:
                                 f.write(html)
 
-                            
-
-                        
-                        
-
                     #max_download_worksに達したら2重ループをやめる
                     #https://note.nkmk.me/python-break-nested-loops/
                     if download_work_no >= max_download_works:
@@ -439,8 +430,6 @@ for user_id in client_info["ids"]:
                 else:
                     sleep(1)
                     user_illusts = aapi.user_illusts(**next_qs)
-                       
-
 
             except:
                 print("error")
@@ -452,13 +441,6 @@ for user_id in client_info["ids"]:
 
                
             
-        print("-----------------------------")
+        print("\033[G-----------------------------")
         print("Download complete!　Thanks to {:<10}".format(user_id) + user_name)
         print()
-
-
-
-
-
-
-
