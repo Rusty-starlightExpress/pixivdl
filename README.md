@@ -1,3 +1,4 @@
+<pre>
 下記 @yuki さんの記事を元に修正を行っています。
 https://qiita.com/yuki_2020/items/716fa4e4ada65306f688
 
@@ -18,5 +19,5 @@ https://qiita.com/yuki_2020/items/716fa4e4ada65306f688
   ・pixiv_downloader.py 取得済みの ids をダウンロード完了毎に削除
 　　--- ダウンロードエラー発生時の復帰時に同じユーザーから取得できるように
   ・PixivPy-Async 使用のほうが性能が良いようなのでPixivPy-Asyncを使って同じ処理を作成
-
+</pre>
   
