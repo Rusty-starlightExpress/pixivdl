@@ -169,7 +169,7 @@ for user_id in client_info["ids"]:
 
                     file_name_head = saving_direcory_path + str(illust.id)+ "_" + title_name + "_p" + str(illust.page_count-1) 
 
-                    if os.path.exists(file_name_head+".png") or os.path.exists(file_name_head+".jpg") or os.path.exists(file_name_head+".jpeg") or os.path.exists(file_name_head+".gif") or os.path.exists(saving_direcory_path+str(illust.id)+'_ugoira'):
+                    if os.path.exists(file_name_head+".png") or os.path.exists(file_name_head+".jpg") or os.path.exists(file_name_head+".jpeg") or os.path.exists(file_name_head+".gif") or os.path.exists(saving_direcory_path+str(illust.id)+"_" + title_name + '_ugoira'):
                         print("\033[2K\033[GCount       : " + str(count) + "\n",end="")
                         print("\033[2K\033[GTitle       : " + title_name +" has already downloaded.\r"+ "\n\033[2A",end="")
                         continue
@@ -178,8 +178,9 @@ for user_id in client_info["ids"]:
                     sleep(1)
                     download_work_no += 1
                     print("\033[2K\033[GCount       : " + str(count) + "\n",end="")
+                    print("\033[2K\033[GType        : " + illust.type + "\n",end="")
                     print("\033[2K\033[Gdownload    : " + illust.title + "\n",end="")
-                    print("\033[2K\033[Gdownload id : " + str(illust.id) + "\n\033[3A",end="")
+                    print("\033[2K\033[Gdownload id : " + str(illust.id) + "\n\033[4A",end="")
                     #print("caption")
                     #print(illust.caption.replace("<br />", "\n"))
 
