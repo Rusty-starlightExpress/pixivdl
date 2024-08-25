@@ -11,7 +11,6 @@ Python 3.11.2
 #idsリストをダウンロード完了毎に削除したい
 #PixivPy-Asyncを使って時間短縮を図りたい
 
-
 from pixivpy3 import *
 import json
 import os
@@ -70,14 +69,11 @@ exclude_tags = ["R-18"]#一つでもかぶっていればダウンロードし�
 for user_id in client_info["ids"]:
     os.system('clear')
     count=1
-
-    #イラストレーター毎に認証を実施
     if first_check != True:
         aapi = AppPixivAPI()
         aapi.auth(refresh_token = client_info["refresh_token"])
     first_check = False
     sleep(10)
-    
     user_detail = aapi.user_detail(user_id)
     
     #主にmany access後の失敗でこちらに並ぶのでsleepを調節するとよい
@@ -88,14 +84,12 @@ for user_id in client_info["ids"]:
         sleep(60)
         #ここ関数化したら使えない
         continue
-    
-    
+
     user_name = user_detail.user.name
     total_works = user_detail.profile.total_illusts + user_detail.profile.total_manga
 
     #将来的に関数にするときのためにbreakを使わない
     if not total_works == 0:
-
 
         #フォルダパス作成
         directory_user_name = user_name
@@ -129,15 +123,11 @@ for user_id in client_info["ids"]:
         if not os.path.exists(saving_direcory_path):
             os.mkdir(saving_direcory_path)
 
-
-
         #ダウンロード開始
         #Display information of illustrator and the number of illustrations
         print("------------------------------------------------------------")
         print("start downloading " + str(total_works) + " illusts of {:<10}".format(user_id) + user_name)
         print("------------------------------------------------------------")
-        
-        
 
         next_qs=None
         download_work_no=0
@@ -209,7 +199,6 @@ for user_id in client_info["ids"]:
                                 new_file = os.path.join(saving_direcory_path, file_name)
                                 os.rename(frame, new_file)
 
-
                         else:
                             for page in illust.meta_pages:
                                 aapi.download(page.image_urls.original, saving_direcory_path)
@@ -235,10 +224,7 @@ for user_id in client_info["ids"]:
                                     new_file = os.path.join(saving_direcory_path, file_name)
                                     os.rename(frame, new_file)
 
-
                                 sleep(1)
-                        
-
 
                     #うごイラ
                     #ページごとdelayが違ううごイラが作れない。今は1枚目のディレイを全体に適用
@@ -281,10 +267,9 @@ for user_id in client_info["ids"]:
                             file_name = os.path.basename(frame)
                             #00000.jpgへの対策
                             file_name =file_name[:-5].lstrip("0") + file_name[-5:]
-                            file_name = str(illust_id) + title_name + "_ugoira" + file_name
+                            file_name = str(illust_id) + title_name + "_ugoira"
                             new_file = os.path.join(dir_name, file_name)
                             os.rename(frame, new_file)
-
                             
                         #jpg以外の画像あるのかわからない
                         frames = glob.glob(f'{dir_name}/*.jpg')
@@ -293,19 +278,14 @@ for user_id in client_info["ids"]:
                         #https://note.nkmk.me/python-sort-num-str/
                         frames.sort(key=lambda s: int(re.findall(r'\d+', s)[-1]))
                         #frames.sort(key=os.path.getmtime, reverse=False)
-                        
 
-
-                        
                         #保存した画像をもとにgifを作成
                         if ugoira_gif  == True:
                             ims = []
                             for frame in frames:
                                 ims.append(Image.open(frame))
                             ims[0].save(f'{saving_direcory_path}/{illust_id}_{title_name}.gif', save_all=True, append_images=ims[1:], optimize=False, duration=ugoira_delay, loop=0)
-
-
-                               
+ 
                         #動画の作成　opencv全角文字問題？ 
                         #なぜか作れる動画と作れない動画があると思ったら、zipの画像が元より小さい縦横の画像があることが判明
                         if ugoira_mp4  == True:
@@ -326,8 +306,7 @@ for user_id in client_info["ids"]:
                             
                             video.release()
                             #print('written')
-                            
-                            
+
                         #ローカルを参照するhtml
                         #https://qiita.com/choshicure/items/8795bf929e34af6622fc
                         if ugoira_html == True:
@@ -370,8 +349,7 @@ for user_id in client_info["ids"]:
                             """.format(width=width, height=height, frames=ugoira_frames, illust_id=illust_id, delay=ugoira_delay, paths_json=paths_json)
                             with open(f'{dir_name}/ugoira.html', 'w', encoding='utf-8') as f:
                                 f.write(html)
-                                
-                                
+
                         #一つのファイルにまとめたhtml
                         if html_onefile == True:
                             import base64
@@ -421,8 +399,7 @@ for user_id in client_info["ids"]:
                     if download_work_no >= max_download_works:
                         finish_flag=True
                         break
-                
-                
+
                 if finish_flag == True:
                    break
                
@@ -443,8 +420,6 @@ for user_id in client_info["ids"]:
                 break
                 #continueだとuser_illustsを新たにとってこれずエラーて回るのでbreakで次のユーザーにまわしちゃう
 
-               
-            
         print("\033[G-----------------------------")
         print("Download complete!　Thanks to {:<10}".format(user_id) + user_name)
         print()
