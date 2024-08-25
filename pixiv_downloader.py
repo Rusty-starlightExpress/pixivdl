@@ -70,11 +70,14 @@ exclude_tags = ["R-18"]#一つでもかぶっていればダウンロードし�
 for user_id in client_info["ids"]:
     os.system('clear')
     count=1
+
+    #イラストレーター毎に認証を実施
     if first_check != True:
         aapi = AppPixivAPI()
         aapi.auth(refresh_token = client_info["refresh_token"])
     first_check = False
     sleep(10)
+    
     user_detail = aapi.user_detail(user_id)
     
     #主にmany access後の失敗でこちらに並ぶのでsleepを調節するとよい
