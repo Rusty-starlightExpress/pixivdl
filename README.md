@@ -3,10 +3,11 @@ https://qiita.com/yuki_2020/items/716fa4e4ada65306f688<br><br>
 
 修正点<br>
 ・保存先をclient.json内で保持<br>
+・ファイル名にタイトルを追加
 ・最新のみ取得を追加<br><br>
 
 ファイル構成<br>
- ・pixiv_auth.py - TOKEN取得用 - 参考サイトよりそおのまま利用<br>
+ ・pixiv_auth.py - TOKEN取得用 - 参考サイトよりそのまま利用<br>
  ・pixiv_follow_id_getter.py - 参考サイトよりそのまま利用<br>
  
  参考サイトから修正<br>
