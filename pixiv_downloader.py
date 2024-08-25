@@ -267,7 +267,7 @@ for user_id in client_info["ids"]:
                             file_name = os.path.basename(frame)
                             #00000.jpgへの対策
                             file_name =file_name[:-5].lstrip("0") + file_name[-5:]
-                            file_name = str(illust_id) + title_name + "_ugoira" + file_name
+                            file_name = str(illust_id) + "_ugoira" + file_name
                             new_file = os.path.join(dir_name, file_name)
                             os.rename(frame, new_file)
                             
