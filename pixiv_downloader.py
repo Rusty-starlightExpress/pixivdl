@@ -70,6 +70,7 @@ for user_id in client_info["ids"]:
     os.system('clear')
     count=1
     if first_check != True:
+        aapi = None
         aapi = AppPixivAPI()
         aapi.auth(refresh_token = client_info["refresh_token"])
     first_check = False
@@ -291,6 +292,9 @@ for user_id in client_info["ids"]:
                         if ugoira_mp4  == True:
                             # encoder(for mp4)
                             fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+                            # 65535エラー対応
+                            if fps*1000 > 65535:
+                                fps = round(fps)
                             # output file name, encoder, fps, size(fit to image size)
                             video = cv2.VideoWriter(f'{saving_direcory_path}/{illust_id}_{title_name}.mp4',fourcc, fps, (width, height))
                             
