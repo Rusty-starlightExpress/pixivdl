@@ -8,9 +8,6 @@ Python 3.11.2
 
 """
 
-#idsリストをダウンロード完了毎に削除したい
-#PixivPy-Asyncを使って時間短縮を図りたい
-
 from pixivpy3 import *
 import json
 import os
@@ -23,9 +20,12 @@ import numpy as np
 import re
 import time
 import sys
+import datetime
+
+client_json = "/home/pi/pixiv/client.json"
 
 #client.jsonの読み込み処理
-f = open("/home/pi/pixiv/client.json", "r")
+f = open(client_json, "r")
 client_info = json.load(f)
 f.close()
 
@@ -65,6 +65,7 @@ exclude_tags = ["R-18"]#一つでもかぶっていればダウンロードし�
 
 
 #ここから各イラストレーターさんごとの処理
+ids_list = client_info["ids"]
 #for user_id in [11,12848282]:
 for user_id in client_info["ids"]:
     os.system('clear')
@@ -427,3 +428,11 @@ for user_id in client_info["ids"]:
         print("\033[G-----------------------------")
         print("Download complete!　Thanks to {:<10}".format(user_id) + user_name)
         print()
+        ids_list.pop(0)
+
+    #client.jsonに書き込む
+    client_info["ids"] = ids_list
+    client_info["version"] = datetime.datetime.now().strftime('%Y%m%d')
+
+    with open(client_json, "w") as n:
+        json.dump(client_info, n, indent=2, ensure_ascii=False)
