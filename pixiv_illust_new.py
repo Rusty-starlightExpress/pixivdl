@@ -101,7 +101,7 @@ while True:
 illust_ids.reverse()
 process_illust_id = 0
 
-print("Download Target : {}".format(len(illust_ids)))
+#print("Download Target : {}".format(len(illust_ids)))
 #ここから各イラストごとの処理
 loop = len(illust_ids)
 download_count = 0
@@ -444,10 +444,9 @@ if loop > 1:
     now = datetime.datetime.now()
     dayTime = str("{0:04d}/{1:02d}/{2:02d} {3:02d}:{4:02d}".format(now.year,now.month,now.day,now.hour,now.minute))
 
-    jsonStr = {}
-    jsonStr["endid"] = process_illust_id
-    jsonStr["dayTime"] = dayTime
-    jsonStr["download_count"] = download_count
-    with open(client_info["complate_json_path"], 'w') as f:
-        json.dump(jsonStr, f, ensure_ascii=True, indent=4)
-    print("------------------------------------------------------------")
+jsonStr = {}
+jsonStr["endid"] = process_illust_id
+jsonStr["dayTime"] = dayTime
+jsonStr["download_count"] = download_count
+with open(client_info["complate_json_path"], 'w') as f:
+    json.dump(jsonStr, f, ensure_ascii=True, indent=4)
