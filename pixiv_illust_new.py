@@ -440,9 +440,9 @@ if loop > 1:
 
         download_count += 1
 
-    #pixiv_complate.jsonの書き込み処理
-    now = datetime.datetime.now()
-    dayTime = str("{0:04d}/{1:02d}/{2:02d} {3:02d}:{4:02d}".format(now.year,now.month,now.day,now.hour,now.minute))
+#pixiv_complate.jsonの書き込み処理
+now = datetime.datetime.now()
+dayTime = str("{0:04d}/{1:02d}/{2:02d} {3:02d}:{4:02d}".format(now.year,now.month,now.day,now.hour,now.minute))
 
 if process_illust_id == 0:
     process_illust_id = endid
