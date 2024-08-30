@@ -167,6 +167,7 @@ for user_id in client_info["ids"]:
                     if os.path.exists(file_name_head+".png") or os.path.exists(file_name_head+".jpg") or os.path.exists(file_name_head+".jpeg") or os.path.exists(file_name_head+".gif") or os.path.exists(saving_direcory_path+str(illust.id)+"_" + title_name + '_ugoira'):
                         print("\033[2K\033[GCount       : " + str(count) + "\n",end="")
                         print("\033[2K\033[GTitle       : " + title_name +" has already downloaded.\r"+ "\n\033[2A",end="")
+                        time.sleep(0.1)
                         continue
  
                     #ダウンロード開始
@@ -428,7 +429,7 @@ for user_id in client_info["ids"]:
         print("\033[G-----------------------------")
         print("Download complete!　Thanks to {:<10}".format(user_id) + user_name)
         print()
-        ids_list.pop(0)
+        ids_list.remove(user_id)
 
     #client.jsonに書き込む
     client_info["ids"] = ids_list
