@@ -19,6 +19,4 @@ https://qiita.com/yuki_2020/items/716fa4e4ada65306f688<br><br>
  　　　　　　　　　　　　※pixiv_downloader.py で一括取得以降に新着のみ取得するために作成　(cron で定期的に実行)<br><br>
                          
 以降やりたいこと<br>
-  ・pixiv_downloader.py 取得済みの ids をダウンロード完了毎に削除<br>
-　　　　--- ダウンロードエラー発生時の復帰時に同じユーザーから取得できるように<br>
   ・PixivPy-Async 使用のほうが性能が良いようなのでPixivPy-Asyncを使って同じ処理を作成<br>
