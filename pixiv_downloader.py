@@ -23,6 +23,7 @@ import sys
 import datetime
 
 client_json = "/home/pi/pixiv/client.json"
+pixiv_error_json = "/home/pi/pixiv/error.log"
 
 #client.jsonの読み込み処理
 f = open(client_json, "r")
@@ -66,6 +67,9 @@ exclude_tags = ["R-18"]#一つでもかぶっていればダウンロードし�
 
 #ここから各イラストレーターさんごとの処理
 ids_list = client_info["ids"]
+error_ids = []
+error_no = 1
+
 #for user_id in [11,12848282]:
 for user_id in client_info["ids"]:
     os.system('clear')
@@ -167,7 +171,6 @@ for user_id in client_info["ids"]:
                     if os.path.exists(file_name_head+".png") or os.path.exists(file_name_head+".jpg") or os.path.exists(file_name_head+".jpeg") or os.path.exists(file_name_head+".gif") or os.path.exists(saving_direcory_path+str(illust.id)+"_" + title_name + '_ugoira'):
                         print("\033[2K\033[GCount       : " + str(count) + "\n",end="")
                         print("\033[2K\033[GTitle       : " + title_name +" has already downloaded.\r"+ "\n\033[2A",end="")
-                        time.sleep(0.1)
                         continue
  
                     #ダウンロード開始
@@ -422,7 +425,21 @@ for user_id in client_info["ids"]:
                 print("error")
                 import traceback
                 traceback.print_exc()
-                sleep(60)
+
+                error = []
+                error["no"] = error_no
+                error["user_id"] = user_id
+                error["user_name"] = user_name
+                error["illust_id"] = illust_id
+                error["title_name"] = title_name
+                error["error"] = traceback.print_exc()
+
+                error_ids.append(error)
+
+                with open(pixiv_error_json, 'w') as f:
+                    json.dump(error_ids, f, ensure_ascii=True, indent=4)
+              
+                sleep(30)
                 break
                 #continueだとuser_illustsを新たにとってこれずエラーて回るのでbreakで次のユーザーにまわしちゃう
 
