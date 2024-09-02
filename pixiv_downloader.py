@@ -23,7 +23,6 @@ import sys
 import datetime
 
 client_json = "/home/pi/pixiv/client.json"
-pixiv_error_json = "/home/pi/pixiv/error.log"
 
 #client.jsonの読み込み処理
 f = open(client_json, "r")
@@ -35,6 +34,11 @@ aapi.auth(refresh_token = client_info["refresh_token"])
 first_check = True
 
 debug = False
+
+#リフレッシュトークン30分更新
+timeout = 3300
+start_time = time.time()
+
 
 #設定
 #ダウンロードする作品数
@@ -74,11 +78,9 @@ error_no = 1
 for user_id in client_info["ids"]:
     os.system('clear')
     count=1
-    if first_check != True:
-        aapi = None
-        aapi = AppPixivAPI()
+    if time.time() - start_time > timeout:
         aapi.auth(refresh_token = client_info["refresh_token"])
-    first_check = False
+        start_time = time.time()
     sleep(10)
     user_detail = aapi.user_detail(user_id)
     
@@ -426,18 +428,21 @@ for user_id in client_info["ids"]:
                 import traceback
                 traceback.print_exc()
 
-                error = []
-                error["no"] = error_no
-                error["user_id"] = user_id
-                error["user_name"] = user_name
-                error["illust_id"] = illust_id
-                error["title_name"] = title_name
-                error["error"] = traceback.print_exc()
+                error_msg = json.load(traceback.print_exc())
+                if error_msg["user_message"] != "Your access is currently restricted":
 
-                error_ids.append(error)
+                    error = []
+                    error["no"] = int(error_no)
+                    error["user_id"] = int(user_id)
+                    error["user_name"] = user_name
+                    error["illust_id"] = int(illust_id)
+                    error["title_name"] = title_name
+                    error["error"] = traceback.print_exc()
 
-                with open(pixiv_error_json, 'w') as f:
-                    json.dump(error_ids, f, ensure_ascii=True, indent=4)
+                    error_ids.append(error)
+
+                    with open(client_info["error_json_path"], 'w') as f:
+                        json.dump(error_ids, f, ensure_ascii=True, indent=4)
               
                 sleep(30)
                 break
