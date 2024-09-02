@@ -5,6 +5,7 @@
   "user_id": "24288858",
   "download_path": "/mnt/sns/pixiv/",
   "complate_json_path": "/mnt/data/pixiv_complate.json",
+  "error_json_path": "/home/pi/pixiv/error.log",
   "refresh_token": "MskllVk77vQqgmM4da2T3Voddch_y6hikIpRrF4ZdYo",
   "ids": [
     2681670,
