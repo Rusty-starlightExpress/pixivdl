@@ -14,6 +14,7 @@ python 3.11.2
 from pixivpy3 import *
 import json
 import os
+import shutil
 from PIL import Image
 import glob
 from time import sleep
@@ -180,8 +181,9 @@ if loop > 1:
                 title_name = title_name.strip("　")
 
                 file_name_head = saving_direcory_path + str(illust.id)+ "_" + title_name + "_p" + str(illust.page_count-1) 
+                file_name_head2 = saving_direcory_path + str(illust.id)+ "_" + title_name 
 
-                if os.path.exists(file_name_head+".png") or os.path.exists(file_name_head+".jpg") or os.path.exists(file_name_head+".jpeg") or os.path.exists(file_name_head+".gif") or os.path.exists(saving_direcory_path+str(illust.id)+'_ugoira'):
+                if os.path.exists(file_name_head+".png") or os.path.exists(file_name_head+".jpg") or os.path.exists(file_name_head+".jpeg") or os.path.exists(file_name_head2+".gif") or os.path.exists(file_name_head2+".mp4") or os.path.exists(saving_direcory_path+str(illust.id)+'_ugoira'):
                     print("--------------------------------")
                     print("Title:"+title_name+" has already downloaded.")
                     continue
@@ -211,7 +213,7 @@ if loop > 1:
                                 print("illust.id    : " + str(illust.id))
                                 print("title_name : " + title_name)
                             #00000.jpgへの対策
-                            file_name = file_name.replace("_",'_{}_'.format(title_name))
+                            file_name = file_name.replace(illust.id+"_p",'{}_{}_p'.format(str(illust.id),title_name))
 
                             new_file = os.path.join(saving_direcory_path, file_name)
                             os.rename(frame, new_file)
@@ -220,27 +222,26 @@ if loop > 1:
                         for page in illust.meta_pages:
                             aapi.download(page.image_urls.original, saving_direcory_path)
 
-                            frames = glob.glob(f'{saving_direcory_path}/{illust.id}_p*.jpg')
-                            frames += glob.glob(f'{saving_direcory_path}/{illust.id}_p*.jpeg')
-                            frames += glob.glob(f'{saving_direcory_path}/{illust.id}_p*.png')
-                            for frame in frames:
-                                if debug:
-                                    print("process 2")
-                                    print("frame        : " + frame)
-                                file_name = os.path.basename(frame)
-                                if debug:
-                                    print("file_name    : " + file_name)
-                                    print("illust.id    : " + str(illust.id))
-                                    print("title_name : " + title_name)
-                                #00000.jpgへの対策
-                                file_name = file_name.replace("_",'_{}_'.format(title_name))
+                        frames = glob.glob(f'{saving_direcory_path}/{illust.id}_p*.jpg')
+                        frames += glob.glob(f'{saving_direcory_path}/{illust.id}_p*.jpeg')
+                        frames += glob.glob(f'{saving_direcory_path}/{illust.id}_p*.png')
+                        for frame in frames:
+                            if debug:
+                                print("process 2")
+                                print("frame        : " + frame)
+                            file_name = os.path.basename(frame)
+                            if debug:
+                                print("file_name    : " + file_name)
+                                print("illust.id    : " + str(illust.id))
+                                print("title_name : " + title_name)
+                            #00000.jpgへの対策
+                            file_name = file_name.replace(illust.id+"_p",'{}_{}_p'.format(str(illust.id),title_name))
 
-                                if debug:
-                                    print("save_file_name: " + file_name)
+                            if debug:
+                                print("save_file_name: " + file_name)
 
-                                new_file = os.path.join(saving_direcory_path, file_name)
-                                os.rename(frame, new_file)
-
+                            new_file = os.path.join(saving_direcory_path, file_name)
+                            os.rename(frame, new_file)
 
                             sleep(1)
                     
@@ -285,7 +286,6 @@ if loop > 1:
                         file_name = os.path.basename(frame)
                         #00000.jpgへの対策
                         file_name =file_name[:-5].lstrip("0") + file_name[-5:]
-                        file_name = str(illust_id) + title_name + "_ugoira" + file_name
                         new_file = os.path.join(dir_name, file_name)
                         os.rename(frame, new_file)
 
@@ -417,6 +417,11 @@ if loop > 1:
                         with open(f'{dir_name}/ugoira_onefile.html', 'w', encoding='utf-8') as f:
                             f.write(html)
 
+                    #うごイラフォルダ削除
+                    if html_onefile == False and ugoira_html == False:
+                      shutil.rmtree(dir_name)
+
+
                 #max_download_worksに達したら2重ループをやめる
                 #https://note.nkmk.me/python-break-nested-loops/
                 if download_work_no >= max_download_works:
@@ -432,7 +437,34 @@ if loop > 1:
                 print("error")
                 import traceback
                 traceback.print_exc()
-                sleep(60)
+
+                now = datetime.datetime.now()
+                dayTime = str("{0:04d}/{1:02d}/{2:02d} {3:02d}:{4:02d}".format(now.year,now.month,now.day,now.hour,now.minute))
+
+                #error.logの読み込み処理
+                f = open(client_info["error_json_path"], "r")
+                error_all_ids_old = json.load(f)
+                f.close()
+
+                errorarray = {}
+                errorarray["user_id"] = user_id
+                errorarray["user_name"] = user_name
+                errorarray["illust_id"] = illust.id
+                errorarray["title_name"] = title_name
+                errorarray["dayTime"] = dayTime
+                
+                error_ids_old = error_all_ids_old["error-data"]
+                error_ids_old.append(errorarray)
+
+                error_ids_array = {}
+                error_ids_array["count"] = len(error_ids_old)
+                error_ids_array["error-data"] = error_ids_old
+
+                with open(client_info["error_json_path"], 'w', encoding="utf-8") as f:
+                    json.dump(error_ids_array, f, ensure_ascii=False, indent=4)
+
+                sleep(30)
+
                 break
                 #continueだとuser_illustsを新たにとってこれずエラーて回るのでbreakで次のユーザーにまわしちゃう
                 
