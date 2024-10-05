@@ -213,7 +213,7 @@ if loop > 1:
                                 print("illust.id    : " + str(illust.id))
                                 print("title_name : " + title_name)
                             #00000.jpgへの対策
-                            file_name = file_name.replace(illust.id+"_p",'{}_{}_p'.format(str(illust.id),title_name))
+                            file_name = file_name.replace(str(illust.id)+"_p",'{}_{}_p'.format(str(illust.id),title_name))
 
                             new_file = os.path.join(saving_direcory_path, file_name)
                             os.rename(frame, new_file)
@@ -235,7 +235,7 @@ if loop > 1:
                                 print("illust.id    : " + str(illust.id))
                                 print("title_name : " + title_name)
                             #00000.jpgへの対策
-                            file_name = file_name.replace(illust.id+"_p",'{}_{}_p'.format(str(illust.id),title_name))
+                            file_name = file_name.replace(str(illust.id)+"_p",'{}_{}_p'.format(str(illust.id),title_name))
 
                             if debug:
                                 print("save_file_name: " + file_name)
