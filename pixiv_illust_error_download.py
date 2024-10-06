@@ -38,7 +38,7 @@ aapi = AppPixivAPI()
 aapi.auth(refresh_token = client_info["refresh_token"])
 
 
-debug = True
+debug = False
 
 #設定
 #ダウンロードする作品数
@@ -138,6 +138,7 @@ if loop > 1:
             #ダウンロード開始
             #Display information of illustrator and the number of illustrations
             print("------------------------------------------------------------")
+            print("{} / {}".format(x+1,len(illust_ids)))
             print("start downloading " + str(total_works) + " "+ illust_detail.illust.type +" (" + str(illust_detail.illust.id)  + ") of {:<10}".format(user_id) + user_name)
 
             next_qs=None
