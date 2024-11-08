@@ -106,6 +106,7 @@ process_illust_id = 0
 #ここから各イラストごとの処理
 loop = len(illust_ids)
 download_count = 0
+compdata = []
 
 if loop > 1:
     for x in range(loop):
@@ -470,6 +471,9 @@ if loop > 1:
                 
             print("Download complete! to {:<10}".format(illust.id) + illust.title)
 
+        onestr = "illust id : {:>9} / user name : {} / illust title {}".format(illust.id, user_name, illust.title)
+        compdata.append(onestr)
+
         download_count += 1
 
 #pixiv_complate.jsonの書き込み処理
@@ -482,5 +486,6 @@ jsonStr = {}
 jsonStr["endid"] = process_illust_id
 jsonStr["dayTime"] = dayTime
 jsonStr["download_count"] = download_count
+jsonStr["download-compleate"] = compdata
 with open(client_info["complate_json_path"], 'w') as f:
     json.dump(jsonStr, f, ensure_ascii=True, indent=4)
